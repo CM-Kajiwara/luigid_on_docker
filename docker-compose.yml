@@ -1,0 +1,26 @@
+version: "2"
+services:
+    mysql:
+        image: mysql:latest
+        container_name: "mysql"
+        environment:
+            MYSQL_USER: luigi
+            MYSQL_PASSWORD: luigi
+            MYSQL_DATABASE: luigi
+            MYSQL_ROOT_PASSWORD: root
+
+    luigid:
+        image: python:alpine
+        container_name: "luigid"
+        volumes:
+            - $PWD/luigid:/luigid
+            - $PWD/logs:/logs
+        links:
+            - mysql:mysql
+        ports:
+            - "8082:8082"
+        depends_on:
+            - mysql
+        entrypoint: 
+            - sh
+            - /luigid/install_and_run.sh
